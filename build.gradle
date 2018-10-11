@@ -11,6 +11,7 @@ buildscript {
 }
 
 apply plugin: 'java'
+apply plugin: 'idea'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
@@ -27,7 +28,8 @@ repositories {
 dependencies {
 	implementation('org.springframework.boot:spring-boot-starter-actuator')
 	implementation('org.springframework.boot:spring-boot-starter-data-cassandra')
+	implementation('org.cassandraunit:cassandra-unit:3.5.0.1')
 	implementation('org.springframework.boot:spring-boot-starter-web')
-	implementation('org.springframework.kafka:spring-kafka')
+//	implementation('org.springframework.kafka:spring-kafka')
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
 }
