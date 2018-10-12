@@ -8,7 +8,8 @@ import java.util.Collection;
 /**
  * Created by play on 10/11/18.
  */
-@RestController("/kafka")
+@RestController
+@RequestMapping("/kafka")
 public class KafkaController {
     private KafkaStubClient client;
 
