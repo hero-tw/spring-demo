@@ -7,3 +7,12 @@ cassandra:
   keyspace: testKeyspace
   host: 127.0.0.1
   port: 9142
+
+kinesis:
+  stream: terraform-kinesis-test
+  records-limit: 50
+  region: us-east-1
+
+aws:
+  access-key: ${AWS_ACCESS_KEY}
+  secret-ley: ${AWS_SECRET_KEY}
