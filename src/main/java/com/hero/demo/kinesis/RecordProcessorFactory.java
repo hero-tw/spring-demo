@@ -5,18 +5,19 @@ import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorF
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
+import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class RecordProcessorFactory implements IRecordProcessorFactory {
 
-    private ConcurrentLinkedQueue<List<String>> processedRecordLists;
+    private ConcurrentLinkedQueue<List<ByteBuffer>> processedRecordLists;
 
     @Value("${kinesis.records-limit}")
     private Integer batchSize;
 
     @Autowired
-    public RecordProcessorFactory(ConcurrentLinkedQueue<List<String>> processedRecordLists) {
+    public RecordProcessorFactory(ConcurrentLinkedQueue<List<ByteBuffer>> processedRecordLists) {
         this.processedRecordLists = processedRecordLists;
     }
 

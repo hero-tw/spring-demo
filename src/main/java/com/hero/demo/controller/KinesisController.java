@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
+import java.util.Map;
 
 
 @RestController
@@ -20,12 +21,17 @@ public class KinesisController {
     }
 
     @RequestMapping(method=RequestMethod.POST)
-    public void sendKinesis(@RequestBody String message) throws Exception {
-        client.send(message);
+    public void sendKinesis(@RequestBody Map<String, Object> user) throws Exception {
+        client.sendUser(
+                (Integer) user.get("id"),
+                (String) user.get("name"),
+                (String) user.get("company"));
     }
 
     @RequestMapping(method=RequestMethod.GET)
-    public Collection<String> getKinesis() {
-        return client.getRecords(10);
+    public Collection<Map<String, Object>> getKinesis() {
+        Collection<Map<String, Object>> result = client.getUsers(10);
+
+        return result;
     }
 }

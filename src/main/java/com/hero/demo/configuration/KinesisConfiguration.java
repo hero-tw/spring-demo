@@ -3,15 +3,11 @@ package com.hero.demo.configuration;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.auth.STSAssumeRoleSessionCredentialsProvider;
-import com.amazonaws.regions.Regions;
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorFactory;
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.InitialPositionInStream;
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.KinesisClientLibConfiguration;
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.Worker;
 import com.amazonaws.services.kinesis.producer.KinesisProducerConfiguration;
-import com.amazonaws.services.securitytoken.AWSSecurityTokenService;
-import com.amazonaws.services.securitytoken.AWSSecurityTokenServiceClientBuilder;
 import com.hero.demo.ApplicationContextAware;
 import com.hero.demo.kinesis.RecordProcessorFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +16,7 @@ import org.springframework.context.annotation.*;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Stack;
 import java.util.UUID;
@@ -31,7 +28,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 @PropertySource({"classpath:application.yml"})
 public class KinesisConfiguration {
 
-    private static ConcurrentLinkedQueue<List<String>> processedRecordLists;
+    private static ConcurrentLinkedQueue<List<ByteBuffer>> processedRecordLists;
 
     private static String KINESIS_REGION;
 
@@ -114,7 +111,7 @@ public class KinesisConfiguration {
     }
 
     @Bean
-    public static ConcurrentLinkedQueue<List<String>> processedRecordLists() {
+    public static ConcurrentLinkedQueue<List<ByteBuffer>> processedRecordLists() {
         if (processedRecordLists == null) {
             processedRecordLists = new ConcurrentLinkedQueue<>();
         }
@@ -130,7 +127,7 @@ public class KinesisConfiguration {
     }
 
     @Bean
-    public IRecordProcessorFactory getRecordProcessorFactory(ConcurrentLinkedQueue<List<String>> processedRecordsList) {
+    public IRecordProcessorFactory getRecordProcessorFactory(ConcurrentLinkedQueue<List<ByteBuffer>> processedRecordsList) {
         return new RecordProcessorFactory(processedRecordsList);
     }
 

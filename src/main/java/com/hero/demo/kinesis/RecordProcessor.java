@@ -10,6 +10,7 @@ import com.amazonaws.services.kinesis.model.Record;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.StandardCharsets;
@@ -29,11 +30,11 @@ public class RecordProcessor implements IRecordProcessor {
     private long nextCheckpointTimeInMillis;
     private final CharsetDecoder decoder = Charset.forName("UTF-8").newDecoder();
 
-    private ConcurrentLinkedQueue<List<String>> processedRecords;
+    private ConcurrentLinkedQueue<List<ByteBuffer>> processedRecords;
 
     private Integer batchSize;
 
-    public RecordProcessor(ConcurrentLinkedQueue<List<String>> processedRecords,
+    public RecordProcessor(ConcurrentLinkedQueue<List<ByteBuffer>> processedRecords,
                            Integer batchSize) {
         this.processedRecords = processedRecords;
         this.batchSize = batchSize;
@@ -75,9 +76,9 @@ public class RecordProcessor implements IRecordProcessor {
 
         for (int i = 0; i < NUM_RETRIES; i++) {
             try {
-                List<String> data =
+                List<ByteBuffer> data =
                         records.stream()
-                                .map(record -> new String(record.getData().array(), StandardCharsets.UTF_8)).collect(Collectors.toList());
+                                .map(record -> ByteBuffer.wrap(record.getData().array())).collect(Collectors.toList());
                 appendProcessedRecords(data);
 
                 processedSuccessfully = true;
@@ -99,7 +100,7 @@ public class RecordProcessor implements IRecordProcessor {
         }
     }
 
-    private void appendProcessedRecords(List<String> userRecords) {
+    private void appendProcessedRecords(List<ByteBuffer> userRecords) {
         if (processedRecords != null) {
             logger.info("Appending userRecords, count={}", userRecords == null ? 0 : userRecords.size());
             processedRecords.add(userRecords);
